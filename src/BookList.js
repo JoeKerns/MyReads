@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 import { Link } from 'react-router-dom';
-import Book from './Book';
+import BookShelf from './BookShelf';
+//import Book from './Book';
 
 class BookList extends Component {
   	changeShelf(bookID, newShelf) {
@@ -13,6 +14,8 @@ class BookList extends Component {
         let wantToRead = books.filter((book) => book.shelf === 'wantToRead');
         let read = books.filter((book) => book.shelf === 'read');
 
+        //console.log('Currently Reading',currentlyReading);
+
         return(
 			<div className="list-books">
 				<div className="list-books-title">
@@ -20,75 +23,40 @@ class BookList extends Component {
             	</div>
           
           		<div className="list-books-content">
-          			<div className="bookshelf">
-                  		<h2 className="bookshelf-title">Currently Reading</h2>
-                  		<div className="bookshelf-books">
-          					<ol className="books-grid">
-                                {currentlyReading.map((book) => (
-                                    <Book
-                                    key={book.id}
-                                    id={book.id}
-                                    title={book.title}
-                                    cover={book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://')}
-                                    authors={book.authors}
-                                    shelf={book.shelf}
-                                    onChangeShelf={(bookID, newShelf) => {
-                                        this.changeShelf(bookID, newShelf)	
-                                    }}
-                                    />
-                                ))}
-                            </ol>
-                        	</div>
-                    	</div>
-                	</div>
+                      
+          		{ currentlyReading.length > 0 && 
+          			<BookShelf 
+          				bookShelf="Currently Reading" 
+          				booksOnShelf={ currentlyReading }
+          				onChangeShelf={(bookID, newShelf) => {
+                			this.changeShelf(bookID, newShelf)	
+                		}}
+          			/> }
           
-          			<div className="bookshelf">
-                  		<h2 className="bookshelf-title">Want to Read</h2>
-
-                  		<div className="bookshelf-books">
-                    		<ol className="books-grid">
-                                {wantToRead.map((book) => (
-                                    <Book
-                                    key={book.id}
-                                    id={book.id}
-                                    title={book.title}
-                                    cover={book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://')}
-                                    authors={book.authors}
-                                    shelf={book.shelf}
-                                    onChangeShelf={(bookID, newShelf) => {
-                                        this.changeShelf(bookID, newShelf)	
-                                    }}
-                                    />
-                                ))}
-                    		</ol>
-                  		</div>
-                	</div>
+          		{ wantToRead.length > 0 && 
+					<BookShelf 
+                 		bookShelf="Want To Read" 
+                 		booksOnShelf={ wantToRead } 
+						onChangeShelf={(bookID, newShelf) => {
+                			this.changeShelf(bookID, newShelf)	
+                		}}
+					/> }
+                      
+                { read.length > 0 && 
+					<BookShelf 
+                 		bookShelf="Read" 
+                 		booksOnShelf={ read } 
+						onChangeShelf={(bookID, newShelf) => {
+                			this.changeShelf(bookID, newShelf)	
+                		}}
+					/> }    
           
           
-          			<div className="bookshelf">
-                  		<h2 className="bookshelf-title">Read</h2>
-                  
-							<div className="bookshelf-books">
-                              <ol className="books-grid">
-                                  {read.map((book) => (
-                                      <Book
-                                      key={book.id}
-                                      id={book.id}
-                                      title={book.title}
-                                      cover={ book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://') }
-                                      authors={book.authors}
-                                      shelf={book.shelf}
-                                      onChangeShelf={(bookID, newShelf) => {
-                                          this.changeShelf(bookID, newShelf)	
-                                      }}
-                                      />
-                                  ))}
-                              </ol>
-                  		</div>
-                	</div>
+          			
 					<div className="open-search">
 						<Link to="/search">Add A Book</Link>
-            		</div>
+                    </div>
+                </div>
           
 			</div>
         )
