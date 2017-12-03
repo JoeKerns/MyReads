@@ -12,10 +12,22 @@ class BookSearch extends Component {
 	}
 
 	updateQuery = (query) => {
-		this.setState({ query: query.trim() });
+		this.setState({ query });
       
       	if (query.length > 3) {
-        	BooksAPI.search(query,10).then((returnedBooks) => { this.setState({ returnedBooks }) });
+        	BooksAPI.search(query,10).then((returnedBooks) => { 
+              	let filteredBooks = [];
+              	returnedBooks.forEach((book) => {
+                  	const cover = book.hasOwnProperty("imageLinks") ? book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://') : 'https://via.placeholder.com/128x193?text=No%20Cover';
+                  	filteredBooks.push({
+                      id: book.id,
+                      title: book.title,
+                      authors: book.authors,
+                      cover 
+                    });
+                });
+              	this.setState({ returnedBooks: filteredBooks });            	
+            });
         }
       
       if (query.length === 0) {
@@ -59,7 +71,6 @@ class BookSearch extends Component {
   	}
 
   	handleModalClose = () => {
-    	console.log('clicked Close Modal OK button');
     	this.setState(() => ( { modalContent: undefined }));
   	}
 
@@ -73,14 +84,6 @@ class BookSearch extends Component {
           		
 					<div className="search-books-input-wrapper">
 						<form>
-                		{/*
-                        NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                        You can find these search terms here:
-                        https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                        However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                        you don't find a specific author or title. Every search is limited by search terms.
-                      */}
                 		<input type="text" name="searchTerm"  placeholder="Search by title or author" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)} />
 						</form>
               		</div>
@@ -89,11 +92,11 @@ class BookSearch extends Component {
               		<ol className="books-grid">
              		{
              		this.state.returnedBooks.length > 0 && this.state.returnedBooks.map((book) => (
-						<Book
+                      	<Book
           					key={book.id}
 							id={book.id}
           					title={book.title}
-          					cover={book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://')}
+          					cover={ book.cover }
           					authors={book.authors}
 							shelf={ books.filter((bookshelfBooks) => bookshelfBooks.id === book.id).map((bookshelfBook) => (bookshelfBook.shelf)) || 'none' }
 							onChangeShelf={(bookID, newShelf) => {

@@ -225,3 +225,9 @@ body, .app {
   font-weight: 300;
   word-break: break-all;
 }
+
+.notFound {
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
+}
