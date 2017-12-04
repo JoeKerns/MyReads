@@ -51,8 +51,6 @@ class BookList extends Component {
                 		}}
 					/> }    
           
-          
-          			
 					<div className="open-search">
 						<Link to="/search">Add A Book</Link>
                     </div>

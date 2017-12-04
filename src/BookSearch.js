@@ -17,15 +17,17 @@ class BookSearch extends Component {
       	if (query.length > 3) {
         	BooksAPI.search(query,10).then((returnedBooks) => { 
               	let filteredBooks = [];
-              	returnedBooks.forEach((book) => {
-                  	const cover = book.hasOwnProperty("imageLinks") ? book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://') : 'https://via.placeholder.com/128x193?text=No%20Cover';
-                  	filteredBooks.push({
-                      id: book.id,
-                      title: book.title,
-                      authors: book.authors,
-                      cover 
+              	if (returnedBooks.length > 0) {
+                    returnedBooks.forEach((book) => {
+                        const cover = book.hasOwnProperty("imageLinks") ? book.imageLinks.smallThumbnail.replace(/^http:\/\//i, 'https://') : 'https://via.placeholder.com/128x193?text=No%20Cover';
+                        filteredBooks.push({
+                          id: book.id,
+                          title: book.title,
+                          authors: book.authors,
+                          cover 
+                        });
                     });
-                });
+                }
               	this.setState({ returnedBooks: filteredBooks });            	
             });
         }
